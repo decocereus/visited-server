@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import passport from "passport";
 import Authentication from "./routes/Authentication";
 import Database from "../src/routes/Database";
 import { connectToDatabase } from "../src/config/db";
@@ -8,7 +9,10 @@ dotenv.config();
 const cors = require("cors");
 const app = express();
 app.use(cors());
+app.use(passport.initialize());
 const port = process.env.PORT || 4500;
+
+app.use(passport.initialize());
 
 app.get("/", (req, res) => {
   res.send("Hello, TypeScript with Express!");
