@@ -1,9 +1,10 @@
 import passport from "passport";
 import dotenv from "dotenv";
+import { db } from "../config/db";
 dotenv.config();
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
-interface User {
+export interface User {
   accessToken: any;
   refreshToken: any;
   name: string;
@@ -18,26 +19,75 @@ export default passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "http://localhost:4500/api/v1/auth/google/callback",
+      callbackURL: "/api/v1/auth/google/callback",
       passReqToCallback: true,
     },
-    function (
+    async function (
       request: any,
-      accessToken: any,
-      refreshToken: any,
+      accessToken: string,
+      refreshToken: string,
       profile: any,
       done: any
     ) {
       const user: User = {
-        accessToken: accessToken,
-        refreshToken: refreshToken,
+        accessToken: accessToken ? accessToken : "null",
+        refreshToken: refreshToken ? refreshToken : "null",
         name: profile.displayName,
         email: profile.emails[0].value,
         googleId: profile.id,
-        avatarUrl: profile.picture,
+        avatarUrl: profile.photos[0].value,
         isVerified: profile.emails[0].verified,
       };
-      return done(null, user);
+      try {
+        // Check if the user already exists in the database
+        const existingUser = await db.oneOrNone(
+          "SELECT * FROM auth_users WHERE googleId = $1",
+          [user.googleId]
+        );
+
+        if (existingUser) {
+          return done(null, existingUser);
+        } else {
+          const newUser = await db.one(
+            "INSERT INTO auth_users (accessToken, refreshToken, name, email, googleId, avatarUrl, isVerified) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+            [
+              user.accessToken,
+              user.refreshToken,
+              user.name,
+              user.email,
+              user.googleId,
+              user.avatarUrl,
+              user.isVerified,
+            ]
+          );
+          return done(null, newUser);
+        }
+      } catch (error) {
+        console.error("Error checking/inserting user:", error);
+        return done(error, null);
+      }
     }
   )
 );
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser(async (incomingUser: User, done) => {
+  try {
+    // Retrieve the user from the database
+    const existingUser = await db.oneOrNone(
+      "SELECT * FROM auth_users WHERE googleId = $1",
+      [incomingUser.googleId]
+    );
+    if (existingUser) {
+      return done(null, existingUser);
+    } else {
+      return done(null, incomingUser);
+    }
+  } catch (error) {
+    console.error("Error deserializing user:", error);
+    return done(error, null);
+  }
+});

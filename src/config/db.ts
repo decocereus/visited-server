@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const pgp = pgPromise();
-const db = pgp({
+export const db = pgp({
   connectionString: process.env.POSTGRES_URL,
   ssl: { rejectUnauthorized: false },
 });

@@ -3,7 +3,7 @@ import passport from "passport";
 import GoogleAuthService from "../services/GoogleAuthService";
 
 /**
- * @ BASE ROUTE /api/v1/auth
+ * @BASE_ROUTE /api/v1/auth
  */
 
 const router: Router = express.Router();
@@ -17,10 +17,15 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
+  passport.authenticate("google", { failureRedirect: "http://localhost:3000" }),
   (req: Request, res: Response) => {
-    res.redirect("/dashboard");
+    res.redirect("http://localhost:3000/dashboard");
   }
 );
+
+router.get("/getCurrentUser", (req: Request, res: Response) => {
+  console.log(req.user);
+  res.send(req.user);
+});
 
 export default router;

@@ -4,12 +4,12 @@ import { sql } from "@vercel/postgres";
 export const createTable = async (req: Request, res: Response) => {
   try {
     const result = await sql`CREATE TABLE IF NOT EXISTS visited_users (
-  id SERIAL PRIMARY KEY,
-  userID VARCHAR(255),
-  URL VARCHAR(255)
-);`;
+      id SERIAL PRIMARY KEY,
+      userID VARCHAR(255),
+      URL VARCHAR(255)
+    );`;
 
-    res.status(200).json({ success: true, result });
+    res.status(200).json({ success: true, result: result });
   } catch (error: any) {
     console.error("Error creating table:", error);
     res.status(500).json({ success: false, error: error.message });
