@@ -44,7 +44,7 @@ export default passport.use(
           "SELECT * FROM auth_users WHERE googleId = $1",
           [user.googleId]
         );
-
+        console.log("In passport strat", user);
         if (existingUser) {
           return done(null, existingUser);
         } else {
@@ -60,6 +60,7 @@ export default passport.use(
               user.isVerified,
             ]
           );
+          console.log("In passport strat new User", newUser);
           return done(null, newUser);
         }
       } catch (error) {
@@ -71,6 +72,7 @@ export default passport.use(
 );
 
 passport.serializeUser((user, done) => {
+  console.log("in serializing user", user);
   done(null, user);
 });
 
@@ -82,8 +84,10 @@ passport.deserializeUser(async (incomingUser: User, done) => {
       [incomingUser.googleId]
     );
     if (existingUser) {
+      console.log("found user");
       return done(null, existingUser);
     } else {
+      console.log("Not found user returning incoing", incomingUser);
       return done(null, incomingUser);
     }
   } catch (error) {
