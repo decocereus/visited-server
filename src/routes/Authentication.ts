@@ -51,6 +51,7 @@ router.get("/getCurrentUser", (req: Request, res: Response) => {
 
 router.get("/logout", (req: Request, res: Response) => {
   console.log("Logging out");
+  googleAuthData = null;
   req.logout(() => {});
   res.redirect("https://visited-client.vercel.app/");
 });
