@@ -2,6 +2,10 @@
 
 This is a Node.js project built with Express and TypeScript.
 
+# Deployed at https://visited-server-backend.onrender.com/
+
+# #IMPORTANT: Before cloning and running locally make sure you have your .env variables handy.
+
 ## Clone the Repository
 
 To get started, clone the repository using the following command:
