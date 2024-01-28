@@ -19,7 +19,8 @@ export default passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "/api/v1/auth/google/callback",
+      callbackURL:
+        "https://visited-client.vercel.app/api/v1/auth/google/callback",
       passReqToCallback: true,
       scope: ["profile", "email"],
     },
