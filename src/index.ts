@@ -2,9 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import passport from "passport";
 import Authentication from "./routes/Authentication";
-import Database from "../src/routes/Database";
+import Database from "./routes/Database";
 import cookieSession from "cookie-session";
-import { connectToDatabase } from "../src/config/db";
+import { connectToDatabase } from "./config/db";
 
 dotenv.config();
 const cors = require("cors");
