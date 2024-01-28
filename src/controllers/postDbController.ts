@@ -18,15 +18,16 @@ export const createTable = async (req: Request, res: Response) => {
 
 export const addVisitedURL = async (req: Request, res: Response) => {
   try {
-    const { userID, URL } = req.body;
-    if (!userID || !URL) {
+    const { visitedUrl, googleId } = req.body;
+    console.log("Adding visited", req.body);
+    if (!visitedUrl || !googleId) {
       return res.status(400).json({
         success: false,
         error: "Both userID and URL are required.",
       });
     }
     const result: any =
-      await sql`INSERT INTO visited_users (userID, URL) VALUES (${userID}, ${URL}) RETURNING *`;
+      await sql`INSERT INTO visited_users (userid, url) VALUES (${googleId}, ${visitedUrl}) RETURNING *`;
 
     res.status(200).json({ success: true, data: result[0] });
   } catch (error: any) {
@@ -35,18 +36,19 @@ export const addVisitedURL = async (req: Request, res: Response) => {
   }
 };
 
-export const getVisitedURLs = async (req: Request, res: Response) => {
+export const getVisitedURL = async (req: Request, res: Response) => {
   try {
-    const { userID } = req.params;
-    if (!userID) {
+    let authUser = req?.user as { googleid?: string };
+    const googleId = authUser?.googleid;
+    if (!googleId) {
       return res
         .status(400)
         .json({ success: false, error: "userID is required." });
     }
     const result =
-      await sql`SELECT * FROM visited_users WHERE userID = ${userID}`;
+      await sql`SELECT * FROM visited_users WHERE userid = ${googleId}`;
 
-    res.status(200).json({ success: true, data: result });
+    res.status(200).json({ success: true, data: result.rows });
   } catch (error: any) {
     console.error("Error fetching rows:", error);
     res.status(500).json({ success: false, error: error.message });

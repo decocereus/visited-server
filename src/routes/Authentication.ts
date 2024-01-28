@@ -24,8 +24,17 @@ router.get(
 );
 
 router.get("/getCurrentUser", (req: Request, res: Response) => {
-  console.log(req.user);
-  res.send(req.user);
+  if (req.user) {
+    res.send(req.user);
+  } else {
+    res.status(500).json({ success: false, error: "User not authenticated" });
+  }
+});
+
+router.get("/logout", (req: Request, res: Response) => {
+  console.log("Logging out");
+  req.logout(() => {});
+  res.redirect("http://localhost:3000");
 });
 
 export default router;

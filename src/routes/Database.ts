@@ -3,10 +3,14 @@ import { Request, Response } from "express";
 import {
   createTable,
   addVisitedURL,
-  getVisitedURLs,
+  getVisitedURL,
 } from "../controllers/postDbController";
 
 const router = Router();
+
+/**
+ * @BASE_ROUTE /api/v1/database/
+ */
 
 router.get("/", (req: any, res: any) => {
   res.send("Database Home");
@@ -21,7 +25,7 @@ router.post("/addVisitedURL", async (req: Request, res: Response) => {
 });
 
 router.get("/getVisitedURLs", async (req: Request, res: Response) => {
-  await getVisitedURLs(req, res);
+  await getVisitedURL(req, res);
 });
 
 export default router;
