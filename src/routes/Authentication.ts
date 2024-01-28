@@ -17,9 +17,11 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "http://localhost:3000" }),
+  passport.authenticate("google", {
+    failureRedirect: "https://visited-client.vercel.app/",
+  }),
   (req: Request, res: Response) => {
-    res.redirect("http://localhost:3000/dashboard");
+    res.redirect("https://visited-client.vercel.app/dashboard");
   }
 );
 
@@ -34,7 +36,7 @@ router.get("/getCurrentUser", (req: Request, res: Response) => {
 router.get("/logout", (req: Request, res: Response) => {
   console.log("Logging out");
   req.logout(() => {});
-  res.redirect("http://localhost:3000");
+  res.redirect("https://visited-client.vercel.app/");
 });
 
 export default router;
