@@ -38,13 +38,17 @@ export const addVisitedURL = async (req: Request, res: Response) => {
 
 export const getVisitedURL = async (req: Request, res: Response) => {
   try {
-    let authUser = req?.user as { googleid?: string };
-    const googleId = authUser?.googleid;
+    // Extract googleId from query parameters
+    const googleId: string | undefined = req.query.googleId as
+      | string
+      | undefined;
+
     if (!googleId) {
       return res
         .status(400)
-        .json({ success: false, error: "userID is required." });
+        .json({ success: false, error: "googleId is required." });
     }
+
     const result =
       await sql`SELECT * FROM visited_users WHERE userid = ${googleId}`;
 
