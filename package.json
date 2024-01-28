@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Server for visited extension",
   "main": "src/index.ts",
-  "type": "module",
   "scripts": {
     "start": "ts-node-dev app.ts",
     "build": "tsc",
