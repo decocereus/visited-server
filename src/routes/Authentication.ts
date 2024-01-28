@@ -21,7 +21,7 @@ router.get(
     failureRedirect: "https://visited-client.vercel.app/",
   }),
   (req: Request, res: Response) => {
-    res.redirect("https://visited-client.vercel.app/dashboard");
+    res.send(req.user);
   }
 );
 
