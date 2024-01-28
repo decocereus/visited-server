@@ -35,5 +35,6 @@ app.use("/api/v1/database", Database);
 
 app.listen(port, async () => {
   console.log("Server is listening on port", port);
+  console.log(process.env);
   await connectToDatabase();
 });
