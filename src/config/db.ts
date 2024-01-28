@@ -6,7 +6,6 @@ dotenv.config();
 const pgp = pgPromise();
 export const db = pgp({
   connectionString: process.env.POSTGRES_URL,
-  ssl: { rejectUnauthorized: false },
 });
 
 export const connectToDatabase = async () => {
